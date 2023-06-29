@@ -1,7 +1,11 @@
 #!/usr/bin/env bash
 # Dispalys info about file 'school'.
 if [ -e "school" ]
-then echo "school file is not empty"
+then
+echo "school file exists"	
+if [ -s "school" ]
+then
+echo "school file is not empty"
 else
 echo "School file is empty
 fi
