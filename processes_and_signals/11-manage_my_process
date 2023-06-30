@@ -1,40 +1,37 @@
 #!/usr/bin/env bash
-#starts stop restart script depending on the argument passed
+#Write a Bash (init) script 11-manage_my_process that manages manage_my_process
 
-function startup(){
-	bash ./manage_my_process &
-	echo "$!" > /var/run/my_process.pid
+start_action() {
+	# starts manage_my_process in the background		
+	./manage_my_process &
+	# creates /var/run/my_process.pid with its PID inside
+	echo $!>/var/run/my_process.pid
+}
+stop_action() {
+    	kill manage_my_process	
+	pkill -f ./manage_my_process
+	# delete /var/run/my_process.pid with force option and sudo to make sure it’s deleted
+	sudo rm /var/run/my_process.pid
 }
 
-function stopnow(){
-	[ -e "/var/run/my_process.pid" ] && pkill -f './manage_my_process' && rm /var/run/my_process.pid 
-}
+case "$1" in
+start)
+    start_action
+    echo "manage_my_process started"
+    ;;
 
-function restartnow(){
-	stopnow
-	startup
-	echo "manage_my_process restarted"
-}
-if [ $# -eq 1 ] 
-then
-	OPTIONN="$1"
-	case $OPTIONN in
-	"start")
-		startup
-	echo "manage_my_process started"
-	;;
-	"stop")
-		#stopnow
-		stopnow
-	      	echo "manage_my_process stopped"
-	;;
-        "restart")
-	restartnow
-	;;
-	*)
-	echo "Usage: manage_my_process {start|stop|restart}"
-	;;
-       esac
-else 
-	echo "Usage: manage_my_process {start|stop|restart}"
-fi
+stop)
+    stop_action
+    echo "manage_my_process stopped"
+    ;;
+
+restart)
+    stop_action
+    start_action
+    echo "manage_my_process restarted"
+    ;;
+
+*)
+    echo "Usage: manage_my_process {start|stop|restart}"
+    ;;
+esac
