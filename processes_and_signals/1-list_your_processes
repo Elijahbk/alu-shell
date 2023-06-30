@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+#script to output process running with all information about it
+ps auxf
